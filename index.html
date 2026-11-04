@@ -1,474 +1,1163 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>هم‌بار | صدها قفسه، یک انبار</title>
+  
+  <!-- فونت استاندارد وزیرمتن -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- فونت وزیرمتن -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/misc/Farsi-Digits/font-face-FD.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+          colors: {
+            brand: {
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    body {
-      font-family: 'Vazirmatn FD', sans-serif;
+    * { font-family: 'Vazirmatn', sans-serif !important; }
+    
+    .dark body { 
+      background-color: #070c18; 
+      color: #f1f5f9;
+      background-image: 
+        radial-gradient(at 15% 15%, rgba(16, 185, 129, 0.08) 0px, transparent 55%),
+        radial-gradient(at 85% 85%, rgba(99, 102, 241, 0.09) 0px, transparent 55%),
+        radial-gradient(at 50% 50%, rgba(14, 165, 233, 0.04) 0px, transparent 65%);
+      background-attachment: fixed;
     }
-    .glass-card {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .dark .glass-panel { 
+      background: rgba(15, 23, 42, 0.88); 
+      backdrop-filter: blur(20px); 
+      border: 1px solid rgba(255, 255, 255, 0.09); 
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08); 
     }
+    .dark .glass-subcard { 
+      background: rgba(30, 41, 59, 0.72); 
+      border: 1px solid rgba(255, 255, 255, 0.07); 
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+    
+    html:not(.dark) body { 
+      background-color: #f8fafc; 
+      color: #0f172a;
+      background-image: 
+        radial-gradient(at 10% 15%, rgba(16, 185, 129, 0.07) 0px, transparent 45%),
+        radial-gradient(at 90% 85%, rgba(99, 102, 241, 0.06) 0px, transparent 45%);
+      background-attachment: fixed;
+    }
+    html:not(.dark) .glass-panel { 
+      background: rgba(255, 255, 255, 0.94); 
+      backdrop-filter: blur(20px); 
+      border: 1px solid rgba(226, 232, 240, 0.9); 
+      box-shadow: 0 15px 30px -10px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1); 
+    }
+    html:not(.dark) .glass-subcard { 
+      background: rgba(248, 250, 252, 0.9); 
+      border: 1px solid rgba(226, 232, 240, 0.95); 
+    }
+    
+    .transition-all-custom { transition: all 0.25s ease-in-out; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-emerald-500 selection:text-black">
+<body class="min-h-screen flex flex-col selection:bg-brand-500 selection:text-white transition-all-custom text-base">
 
-  <!-- نوبار بالا -->
-  <header class="sticky top-0 z-50 glass-card border-b border-slate-800">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-black text-slate-950 text-xl shadow-lg shadow-emerald-500/20">
+  <!-- کانتینر اعلان‌های Toast -->
+  <div id="toast-container" class="fixed top-5 left-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- نوار ناوبری اصلی (۴ بخش منظم) -->
+  <header class="sticky top-0 z-40 glass-panel border-b px-4 lg:px-8 py-3.5 transition-all-custom">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
+      
+      <!-- لوگو و عنوان برند -->
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 via-teal-500 to-indigo-600 flex items-center justify-center font-black text-xl text-white shadow-lg shadow-brand-500/25">
           📦
         </div>
         <div>
-          <span class="text-xl font-black text-white tracking-tight">هم‌بار</span>
-          <span class="hidden sm:inline-block text-xs text-emerald-400 mr-2 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">نسخه ایران با حالت بقا 🛡️</span>
+          <div class="flex items-center gap-2">
+            <span class="font-black text-xl tracking-tight text-slate-900 dark:text-white">هم‌بار</span>
+            <span class="text-[11px] bg-brand-500/15 text-brand-600 dark:text-brand-400 border border-brand-500/30 px-2.5 py-0.5 rounded-full font-bold">صدها قفسه، یک انبار</span>
+          </div>
+          <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">هیچ دایرکتی دست‌خالی برنمی‌گرده!</p>
         </div>
       </div>
 
-      <!-- منوی تب‌ها -->
-      <nav class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium">
-        <button onclick="switchTab('home')" id="tab-home" class="tab-btn px-3 py-1.5 rounded-lg text-emerald-400 bg-emerald-500/10 transition">
-          داستان و طرز کار
+      <!-- ۴ تب ناوبری اصلی -->
+      <nav class="flex items-center gap-1.5 bg-slate-200/70 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-slate-300/80 dark:border-slate-800 max-w-full overflow-x-auto">
+        <button id="tab-btn-home" onclick="switchMainTab('home')" class="whitespace-nowrap flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-gradient-to-r from-brand-600 to-teal-600 text-white shadow-sm shrink-0">
+          <span>🏠</span> داستان و طرز کار
         </button>
-        <button onclick="switchTab('survival')" id="tab-survival" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
-          حالت بقا (ویژه ایران) ⚡
+        <button id="tab-btn-survival" onclick="switchMainTab('survival')" class="whitespace-nowrap flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-white transition-all shrink-0">
+          <span>⚡</span> سپر بقا (ویژه ایران)
         </button>
-        <button onclick="switchTab('faq')" id="tab-faq" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
-          ۸ پرسش اساسی
+        <button id="tab-btn-market" onclick="switchMainTab('market')" class="whitespace-nowrap flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-white transition-all shrink-0">
+          <span>📊</span> تحلیل بازار و رقبا
         </button>
-        <button onclick="switchTab('calc')" id="tab-calc" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
-          چرتکه سود 🧮
+        <button id="tab-btn-mvp" onclick="switchMainTab('mvp')" class="whitespace-nowrap flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-white transition-all shrink-0">
+          <span>🧪</span> شبیه‌ساز زنده (MVP)
         </button>
       </nav>
+
+      <!-- سوئیچر تم شب/روز -->
+      <button onclick="toggleTheme()" class="shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition">
+        <span id="theme-icon">🌙</span>
+        <span id="theme-text">حالت شب</span>
+      </button>
+
     </div>
   </header>
 
-  <!-- بدنه اصلی محتوا -->
-  <main class="max-w-5xl mx-auto px-4 py-8">
-
-    <!-- ==================== تب ۱: خانه، داستان و طرز کار ==================== -->
-    <section id="content-home" class="tab-content space-y-12">
-      
-      <!-- هدر خوش‌آمدگویی و شعار -->
-      <div class="text-center space-y-3 pt-4">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
-          🚀 شبکه سراسری هم‌پوشانی انبار آنلاین‌شاپ‌ها
+  <!-- ========================================================= -->
+  <!-- بخش اول: داستان، طرز کار و سازمان‌دهی ایده                  -->
+  <!-- ========================================================= -->
+  <main id="view-home" class="flex-grow max-w-7xl mx-auto px-4 py-8 md:py-10 space-y-12 w-full">
+    
+    <!-- ۱. هدر اصلی داستان ایده -->
+    <section class="glass-panel rounded-3xl p-6 md:p-10 lg:p-12 relative overflow-hidden transition-all-custom border-t-4 border-t-brand-500 shadow-xl">
+      <div class="max-w-4xl space-y-5 md:space-y-6 relative z-10">
+        
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs md:text-sm font-bold bg-brand-500/15 text-brand-600 dark:text-brand-400 border border-brand-500/30">
+          <span class="w-2.5 h-2.5 rounded-full bg-brand-500 animate-ping"></span>
+          زنده کردن فروش‌های سوخته در بازار ۸۸.۸ همتی دایرکت ایران
         </div>
-        <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-          هم‌بار؛ <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">هیچ دایرکتی دست‌خالی برنمی‌گرده!</span>
+        
+        <h1 class="text-2xl md:text-4xl lg:text-5xl font-black leading-snug md:leading-tight tracking-tight text-slate-900 dark:text-white">
+          هم‌بار؛ <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-teal-500 to-indigo-500 dark:from-brand-400 dark:via-teal-300 dark:to-indigo-300">
+            هیچ دایرکتی دست‌خالی برنمی‌گرده!
+          </span>
         </h1>
-        <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto">
-          صدها قفسه، یک انبار مشترک. به جای اینکه بگی «تموم کردیم»، در ۳۰ ثانیه از قفسه همکارت بفروش و سود خالص ببر.
+        
+        <p class="text-slate-600 dark:text-slate-300 text-sm md:text-base lg:text-lg leading-relaxed">
+          تا به حال چند بار مشتری آماده به خرید اومده دایرکت، ولی چون رنگ یا سایز مورد نظرش تموم شده بود، با گفتن «شرمنده عزیزم، اتمام موجودی» مشتری رو فرستادی پیج رقیب؟ 
+          «هم‌بار» قفسه صدها فروشنده رو در لحظه به هم وصل می‌کنه تا بدون خواباندن یک ریال سرمایه در انبار، جنس کسری رو در ۳۰ ثانیه جور کنی و سودت رو نقد ببری.
         </p>
-      </div>
 
-      <!-- باکس قول هم‌بار (ارزش پیشنهادی) -->
-      <div class="glass-card rounded-2xl p-6 sm:p-8 border-r-4 border-r-emerald-500 shadow-xl shadow-emerald-950/20">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="text-2xl">💡</span>
-          <h2 class="text-xl font-black text-white">قول «هم‌بار» به شما: دیگه به مشتری نگو «تموم کردیم!»</h2>
-        </div>
-        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-          فرض کن مشتری کارت‌به‌دست اومده دایرکت و سایز یا رنگی رو می‌خواد که توی قفسه‌ات تموم شده؛ به جای اینکه بگی «نداریم» و بره از رقیبت بخره، <strong class="text-emerald-400">هم‌بار</strong> در چند ثانیه اون جنس رو از قفسه همکارت برات جور می‌کنه! پول تا لحظه تحویل سالم جنس دست ما امانت می‌مونه، همکارت بسته رو بی‌نام‌ونشان با اسم و لیبل پیج خودت می‌فرسته؛ نه مشتری می‌پره، نه پولت می‌سوزه، سودت هم سر جاشه.
-        </p>
-      </div>
-
-      <!-- درد واقعی: سناریوی قبل و بعد -->
-      <div class="space-y-4">
-        <div class="text-center">
-          <h3 class="text-lg font-bold text-slate-200">چرا این مشکل ارزش حل کردن داره؟</h3>
-          <p class="text-xs text-slate-400">نگاهی به سرنوشت تلخ دایرکت‌های سوخته در پیج‌های فروشگاهی</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- قبل از هم‌بار -->
-          <div class="bg-red-500/5 border border-red-500/20 rounded-2xl p-5 space-y-3">
-            <div class="flex items-center gap-2 text-red-400 font-bold text-sm">
-              <span>❌</span> قبل از هم‌بار: سوختن زحمت و تبلیغات
-            </div>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              کلی هزینه تبلیغات بلاگر و اکسپلور دادی، مشتری میاد دایرکت میگه «کفش مشکی سایز ۳۸ دارید؟» می‌نویسی: «نه متاسفانه فقط ۴۰ داریم». مشتری میره و پشت سرش رو هم نگاه نمی‌کنه. ۳۵ درصد سود ماهانه‌ات به همین سادگی دود میشه!
-            </p>
+        <!-- باکس قول هم‌بار (ارزش پیشنهادی ساده و رفاقتی) -->
+        <div class="p-5 md:p-6 rounded-2xl glass-subcard text-sm md:text-base border-r-4 border-r-brand-500 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">💡</span>
+            <span class="text-brand-600 dark:text-brand-400 font-extrabold text-sm md:text-base">قول «هم‌بار» به شما: دیگه به مشتری نگو «تموم کردیم!»</span>
           </div>
-          <!-- بعد از هم‌بار -->
-          <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5 space-y-3">
-            <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
-              <span>✅</span> با هم‌بار: نقد کردن فوری سفارش
-            </div>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              سایز ۳۸ رو نداری؟ وارد ربات هم‌بار میشی، می‌بینی یک همکار در شهر دیگه ۴ جفت اضافه داره. پول رو از مشتری می‌گیری، سفارش رو ثبت می‌کنی؛ همکارت با لیبل پیج خودت پست می‌کنه. بدون یک ریال سرمایه برای انبارداری، سودت رو کشیدی بیرون!
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- ۳ گام ساده: هم‌بار چطور کار می‌کنه؟ -->
-      <div class="space-y-6">
-        <div class="text-center">
-          <h3 class="text-xl font-bold text-white">طرز کار هم‌بار در ۳ ثانیه</h3>
-          <p class="text-xs text-slate-400">بدون تشریفات، بدون نیاز به نصب نرم‌افزار سنگین</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div class="glass-card p-5 rounded-2xl relative overflow-hidden group hover:border-emerald-500/50 transition">
-            <span class="text-3xl mb-3 block">🔍</span>
-            <div class="text-emerald-400 font-black text-sm mb-1">گام اول: استعلام فوری قفسه‌ها</div>
-            <p class="text-slate-400 text-xs leading-relaxed">
-              مشتری کالا رو می‌خواد؟ بارکد یا اسمش رو در هم‌بار جستجو می‌کنی؛ موجودی زنده صدها قفسه مطمئن در اختیارت قرار می‌گیره.
-            </p>
-          </div>
-
-          <div class="glass-card p-5 rounded-2xl relative overflow-hidden group hover:border-emerald-500/50 transition">
-            <span class="text-3xl mb-3 block">🔒</span>
-            <div class="text-emerald-400 font-black text-sm mb-1">گام دوم: دخل امانت (بدون کلاهبرداری)</div>
-            <p class="text-slate-400 text-xs leading-relaxed">
-              پول مشتری پیش هم‌بار امن می‌مونه. همکار با خیال راحت کالا رو آماده می‌کنه چون مطمئنه پول در سیستمه و سوخت نمیشه.
-            </p>
-          </div>
-
-          <div class="glass-card p-5 rounded-2xl relative overflow-hidden group hover:border-emerald-500/50 transition">
-            <span class="text-3xl mb-3 block">📦</span>
-            <div class="text-emerald-400 font-black text-sm mb-1">گام سوم: ارسال محرمانه به نام تو</div>
-            <p class="text-slate-400 text-xs leading-relaxed">
-              همکارت بسته رو بی‌نام‌ونشان با لیبل و شماره پیج خودت پست می‌کنه. مشتری بسته رو باز می‌کنه و اعتبار مال خودته!
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- ۳ ستون اصلی اعتماد -->
-      <div class="glass-card p-6 rounded-2xl space-y-4">
-        <div class="flex items-center gap-2">
-          <span class="text-xl text-emerald-400">🛡️</span>
-          <h3 class="text-base font-bold text-white">چرا هم‌بار؟ صدها قفسه، یک انبار.</h3>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
-          <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
-            <span class="font-bold text-emerald-400 block mb-1">۱. انبار بی‌نهایت، سرمایه صفر:</span>
-            تو فقط جنس‌های پرفروشت رو بخر، بقیه واریانت‌ها رو از قفسه بقیه بفروش.
-          </div>
-          <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
-            <span class="font-bold text-emerald-400 block mb-1">۲. حفظ مشتری و برند:</span>
-            همکار هرگز به هویت مشتری تو دسترسی مستقیم نداره و امکان دور زدن نیست.
-          </div>
-          <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
-            <span class="font-bold text-emerald-400 block mb-1">۳. تسویه ریالی خودکار:</span>
-            به محض اینکه بسته تحویل مشتری شد، سودت بدون تاخیر توی جیبته.
-          </div>
-        </div>
-      </div>
-
-      <!-- باکس چرا دلالی نیست؟ -->
-      <div class="p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-700/60 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="space-y-1">
-          <h4 class="text-base font-black text-white flex items-center gap-2">
-            <span>⚖️</span> چرا این کار دلالی نیست و برای همه سود داره؟
-          </h4>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            دلال جنس رو قایم می‌کنه و گرونش می‌کنه. هم‌بار کالا رو به همون قیمت عادلانه می‌رسونه به دست مشتری و سودی که قرار بود بسوزه رو بین دو تا فروشنده خرد تقسیم می‌کنه.
+          <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-xs md:text-sm lg:text-base">
+            «فرض کن مشتری کارت‌به‌دست اومده دایرکت و سایزی رو می‌خواد که تو قفسه‌ات نداری؛ به جای اینکه بگی نداریم و بره از رقیبت بخره، ما در ۳۰ ثانیه اون جنس رو از قفسه همکارت برات جور می‌کنیم! پول تا لحظه تحویل سالم جنس دست ما امانت می‌مونه، همکارت بسته رو بی‌نام‌ونشان با اسم پیج خودت می‌فرسته؛ نه مشتری می‌پره، نه پولت می‌سوزه، سودت هم سر جاشه.»
           </p>
         </div>
-        <button onclick="switchTab('survival')" class="shrink-0 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition">
-          دیدن برگ برنده ایرانی: حالت بقا ⚡
-        </button>
-      </div>
 
+        <!-- دکمه‌های حرکت سریع -->
+        <div class="flex flex-wrap items-center gap-3.5 pt-2">
+          <button onclick="switchMainTab('mvp')" class="px-6 py-3 md:px-7 md:py-3.5 rounded-xl bg-gradient-to-r from-brand-600 via-teal-600 to-indigo-600 text-white font-extrabold text-xs md:text-sm shadow-lg hover:scale-105 transition-all">
+            امتحان کردن در شبیه‌ساز عملیاتی ←
+          </button>
+          <button onclick="switchMainTab('survival')" class="px-5 py-3 md:px-6 md:py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-200/50 dark:hover:bg-slate-800 text-slate-800 dark:text-white font-bold text-xs md:text-sm transition-all flex items-center gap-1.5">
+            <span>⚡</span> بررسی «سپر بقا» در قطعی اینترنت
+          </button>
+        </div>
+      </div>
     </section>
 
-    <!-- ==================== تب ۲: حالت بقا (برگ برنده ایرانی) ==================== -->
-    <section id="content-survival" class="tab-content hidden space-y-8">
-      
-      <!-- بنر ویژه قابلیت -->
-      <div class="glass-card border-2 border-emerald-500/40 rounded-3xl p-6 sm:p-10 relative overflow-hidden">
-        <div class="absolute -top-10 -left-10 w-44 h-44 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="space-y-4 relative z-10">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30">
-            ⚡ قابلیت انحصاری برای بازار ایران (Resilience Layer)
-          </div>
-          <h2 class="text-2xl sm:text-4xl font-black text-white leading-tight">
-            «حالت بقا» (Survival Mode)؛ <br>
-            <span class="text-emerald-400">وقتی اینستاگرام می‌خوابد، فروش شما بیدار می‌ماند!</span>
-          </h2>
-          <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-3xl">
-            بزرگ‌ترین کابوس فروشنده ایرانی فیلترینگ و قطعی ناگهانی اینترنت بین‌الملل است. در نسخه‌های خارجی مثل Stockly چنین امکانی وجود ندارد چون اینترنت آنها قطع نمی‌شود! «هم‌بار» با طراحی بازوی اختصاصی روی پیام‌رسان داخلی **بله**، ارتباط شما را به شبکه شتاب و قفسه همکاران حتی در خاموشی اینترنت بین‌الملل زنده نگه می‌دارد.
-          </p>
-        </div>
+    <!-- ۲. سناریوی ملموس: قبل و بعد از هم‌بار -->
+    <section class="space-y-4">
+      <div class="text-center max-w-xl mx-auto space-y-1">
+        <h3 class="text-lg md:text-xl font-black text-slate-900 dark:text-white">درد واقعی چیه و چرا دایرکت‌ها می‌سوزند؟</h3>
+        <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400">یک مقایسه سریع از اتفاقی که همین امروز در پیج شما می‌افتد</p>
       </div>
 
-      <!-- مقایسه رقبای خارجی و هم‌بار -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div class="bg-slate-900/70 border border-slate-800 p-6 rounded-2xl space-y-3">
-          <div class="text-slate-400 font-bold text-sm flex items-center gap-2">
-            <span>🌐</span> مدل‌های خارجی (مثل Stockly فرانسه)
+        <div class="glass-panel p-6 rounded-3xl border-t-4 border-t-rose-500 space-y-3">
+          <div class="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-bold text-sm md:text-base">
+            <span>❌</span> وضعیت عادی (قبل از هم‌بار): سوختن هزینه تبلیغ و مشتری
           </div>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            کاملاً وابسته به وب باز، کارت‌های اعتباری ویزا و کلودهای آمازون. اگر اینترنت ملی شود یا فیلترینگ اعمال شود، در ایران ۱۰۰٪ از کار می‌افتند و فروشگاه‌ها تعطیل می‌شوند.
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            کلی هزینه عکاسی، بلاگر و تبلیغات دادی تا مشتری اومده دایرکت و میگه: <i>«شلوار بگ ذغالی سایز ۳۸ دارید؟ کارت بدید واریز کنم»</i>. قفسه‌ات خالیه؛ تایپ می‌کنی: <i>«عزیزم شرمنده ۳۸ تموم شد، ۴۲ بدم؟»</i> مشتری حتی سین هم نمی‌کنه و میره از پیج رقیب می‌خره. هزینه تبلیغ هدر رفت و مشتری برای همیشه پرید!
           </p>
         </div>
 
-        <div class="bg-emerald-500/10 border border-emerald-500/30 p-6 rounded-2xl space-y-3">
-          <div class="text-emerald-400 font-bold text-sm flex items-center gap-2">
-            <span>🇮🇷</span> هم‌بار مجهز به لایه بقا (بومی‌سازی اصیل)
+        <div class="glass-panel p-6 rounded-3xl border-t-4 border-t-brand-500 space-y-3">
+          <div class="flex items-center gap-2 text-brand-600 dark:text-brand-400 font-bold text-sm md:text-base">
+            <span>✅</span> با هم‌بار: نقد کردن در لحظه و افزایش ۴۰ درصدی فروش
           </div>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            دارای بازوی اختصاصی روی پیام‌رسان داخلی بله. هم استعلام موجودی قفسه‌ها بدون اینترنت بین‌الملل باز است، هم مشتری مستقیماً با کیف‌پول بانکی بله وجه را پرداخت می‌کند.
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            سایز ۳۸ رو نداری؟ وارد هم‌بار میشی، می‌بینی یک همکار معتبر در تبریز ۶ تا اضافه داره. پول رو از مشتری می‌گیری، در سیستم ثبت می‌کنی؛ همکارت کالا رو با جعبه و لیبل پیج خودت پست می‌کنه. مشتری خوشحال، سود خالص در جیبت، و بدون اینکه یک ریال جنس دپو کرده باشی!
           </p>
         </div>
       </div>
+    </section>
 
-      <!-- ۳ گام کارکرد در شرایط قطعی اینترنت -->
-      <div class="space-y-4">
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <span>⚙️</span> حالت بقا در زمان قطعی اینترنت چطور کار می‌کند؟
+    <!-- ۳. طرز کار هم‌بار در ۳ گام ساده -->
+    <section class="glass-panel p-6 md:p-10 rounded-3xl space-y-6 border-r-4 border-r-indigo-500">
+      <div class="text-center max-w-xl mx-auto space-y-1">
+        <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">ساده و بی‌دردسر</span>
+        <h3 class="text-lg md:text-2xl font-black text-slate-900 dark:text-white">هم‌بار در عمل چطور کار می‌کنه؟ (۳ گام در ۳۰ ثانیه)</h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-5 rounded-2xl glass-subcard space-y-2.5 border-t-2 border-t-indigo-500">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black text-lg">۱</div>
+          <h4 class="font-bold text-sm md:text-base text-slate-900 dark:text-white">استعلام فوری قفسه‌ها</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            کالایی رو کم داری؟ اسم یا سایزش رو سرچ می‌کنی؛ موجودی زنده صدها همکار مطمئن با قیمت تسویه عمده جلوت ظاهر میشه.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard space-y-2.5 border-t-2 border-t-indigo-500">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black text-lg">۲</div>
+          <h4 class="font-bold text-sm md:text-base text-slate-900 dark:text-white">دخل امانت (Escrow Lock)</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            مشتری پول رو واریز می‌کنه و مبلغ در دخل امن هم‌بار فریز میشه. نه همکار نگران پولشه، نه تو نگران بدقولی در ارسالی.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard space-y-2.5 border-t-2 border-t-indigo-500">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black text-lg">۳</div>
+          <h4 class="font-bold text-sm md:text-base text-slate-900 dark:text-white">ارسال مخفی با نام تو</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            لیبل با مشخصات و لوگوی پیج تو چاپ میشه. همکار کالا رو پست می‌کنه، با ثبت بارکد پستی پول آزاد میشه و مشتری فقط تو رو می‌شناسه!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ۴. بخش: چرا هم‌بار؟ صدها قفسه، یک انبار -->
+    <section class="space-y-4">
+      <div class="flex items-center gap-2.5">
+        <span class="w-3 h-3 rounded-full bg-brand-500"></span>
+        <h3 class="text-lg md:text-2xl font-black text-slate-900 dark:text-white">چرا هم‌بار؟ صدها قفسه، یک انبار.</h3>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="glass-panel p-6 rounded-3xl border-r-4 border-r-brand-500 space-y-3">
+          <div class="w-11 h-11 rounded-2xl bg-brand-500/15 text-brand-600 dark:text-brand-400 flex items-center justify-center text-xl font-black">
+            ☁️
+          </div>
+          <h4 class="font-bold text-base md:text-lg text-slate-900 dark:text-white">۱. انبار بی‌نهایت، سرمایه صفر</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            تو فقط رنگ‌ها و سایزهای پرفروش خودت رو توی خونه نگه دار؛ بقیه اقلام رو بدون نیاز به سرمایه خوابیده، از قفسه همکارانت بفروش.
+          </p>
+        </div>
+
+        <div class="glass-panel p-6 rounded-3xl border-r-4 border-r-brand-500 space-y-3">
+          <div class="w-11 h-11 rounded-2xl bg-brand-500/15 text-brand-600 dark:text-brand-400 flex items-center justify-center text-xl font-black">
+            🔒
+          </div>
+          <h4 class="font-bold text-base md:text-lg text-slate-900 dark:text-white">۲. تسویه امن و حذف کارت‌به‌کارت</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            دیگه لازم نیست نگران باشی که اول همکار جنس رو بفرسته یا اول تو پول بزنی. تا بارکد پستی صادر نشه و سلامت جنس تایید نشه، پول دست ما امانته.
+          </p>
+        </div>
+
+        <div class="glass-panel p-6 rounded-3xl border-r-4 border-r-brand-500 space-y-3">
+          <div class="w-11 h-11 rounded-2xl bg-brand-500/15 text-brand-600 dark:text-brand-400 flex items-center justify-center text-xl font-black">
+            🏷️
+          </div>
+          <h4 class="font-bold text-base md:text-lg text-slate-900 dark:text-white">۳. ارسال بدون نام و حفظ برند تو</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            بزرگ‌ترین ترس آنلاین‌شاپ دزدیده شدن مشتریه. تمام مرسوله‌ها با فرستندگی و آدرس پیج خودت پست میشن و همکار حق گذاشتن شماره تماس خودش رو نداره.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ۵. چرا این کار دلالی نیست و برای همه برکت دارد؟ -->
+    <section class="glass-panel p-6 md:p-10 rounded-3xl space-y-6 border-r-4 border-r-emerald-500">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div>
+          <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">شفاف و اخلاقی</span>
+          <h3 class="text-lg md:text-2xl font-black text-slate-900 dark:text-white">چرا هم‌بار دلالی نیست و برای همه سود داره؟</h3>
+        </div>
+        <span class="text-xs bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full font-bold">ارزش‌آفرینی اصیل</span>
+      </div>
+
+      <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+        دلال سنتی جنس رو احتکار می‌کنه، قیمت رو باد می‌کنه و بدون ایجاد هیچ ارزشی سود می‌کشه. در «هم‌بار» قیمت برای مشتری حتی هزار تومان هم گرون نمیشه! ما جنس خاک‌خورده قفسه یک همکار رو در اختیار فروشنده‌ای می‌ذاریم که همین الان مشتری آماده داره. سودی که قرار بود ۱۰۰ درصد بسوزه، بین دو همکار زحمت‌کش تقسیم میشه.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-4 rounded-2xl glass-subcard space-y-2 border-t-2 border-t-emerald-500">
+          <strong class="text-slate-900 dark:text-white text-sm font-bold block">۱. زنده کردن جنس‌های راکد:</strong>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">جنس‌هایی که گوشه انبار ماه‌ها خاک می‌خوردن و سرمایه رو قفل کرده بودن، سریعاً به پول نقد تبدیل میشن.</p>
+        </div>
+        <div class="p-4 rounded-2xl glass-subcard space-y-2 border-t-2 border-t-emerald-500">
+          <strong class="text-slate-900 dark:text-white text-sm font-bold block">۲. نجات زمان طلایی:</strong>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">به جای ۴۵ دقیقه التماس در گروه‌های متفرقه تلگرام، سفارش ظرف ۳۰ ثانیه جور میشه.</p>
+        </div>
+        <div class="p-4 rounded-2xl glass-subcard space-y-2 border-t-2 border-t-emerald-500">
+          <strong class="text-slate-900 dark:text-white text-sm font-bold block">۳. مشتری وفادار می‌ماند:</strong>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">خریدار طعم شیرین سرعت و در دسترس بودن همه‌چیز رو در پیج تو می‌چشه و تبدیل به خریدار همیشگی میشه.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ۶. پشت صحنه سیستم: ماهیت الکترونیکی و ۴ لنز نوآوری -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- ماهیت دیجیتال به زبان ساده -->
+      <div class="glass-panel p-6 md:p-8 rounded-3xl space-y-5 border-t-4 border-t-teal-500">
+        <h3 class="text-base md:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+          <span>⚙️</span> این سیستم چطور کار می‌کنه و پشت صحنه چه خبره؟
+        </h3>
+        <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          طبق مبانی تجارت الکترونیک (فصل اول کتاب مرجع Laudon)، کسب‌وکارها در سه بعد کالا، فرآیند و تحویل بررسی میشن:
+        </p>
+
+        <div class="space-y-3 text-xs md:text-sm">
+          <div class="p-3.5 rounded-2xl glass-subcard">
+            <b class="text-teal-600 dark:text-teal-400 block mb-1">کالا (فیزیکی با شناسنامه ابری):</b>
+            شلوار و مانتو واقعی است، اما هویتش در هم‌بار تبدیل به یک کارت دیجیتال زنده با سایز، موجودی و رنگ لحظه‌ای شده.
+          </div>
+          <div class="p-3.5 rounded-2xl glass-subcard">
+            <b class="text-teal-600 dark:text-teal-400 block mb-1">فرآیند مبادله (۱۰۰٪ آنلاین و خودکار):</b>
+            استعلام دایرکت، پیدا کردن همکار، بلوکه کردن وجه و تسهیم سود کاملاً بدون دخالت انسانی و در لحظه انجام میشه.
+          </div>
+          <div class="p-3.5 rounded-2xl glass-subcard">
+            <b class="text-teal-600 dark:text-teal-400 block mb-1">تحویل و لجستیک (هوشمند و پستی):</b>
+            کالا با پست پیشتاز جابه‌جا میشه، اما تایید وصول با وب‌سرویس مستقیم رهگیری ۲۴ رقمی پست دیجیتالی است.
+          </div>
+        </div>
+      </div>
+
+      <!-- ۴ لنز نوآوری به زبان خودمانی -->
+      <div class="glass-panel p-6 md:p-8 rounded-3xl space-y-5 border-t-4 border-t-indigo-500">
+        <h3 class="text-base md:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+          <span>🔍</span> ۴ زاویه نگاه متفاوت که این ایده از دل آن‌ها درآمد
         </h3>
 
-        <div class="space-y-3 text-xs sm:text-sm text-slate-300">
-          <div class="glass-card p-4 rounded-xl flex items-start gap-3">
-            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold shrink-0">۱</span>
-            <div>
-              <strong class="text-white block mb-0.5">سوئیچ خودکار به سرورهای ملی:</strong>
-              به محض اختلال در شبکه بین‌الملل، فروشنده از طریق بازوی تلگرامی/اینستاگرامی به ربات بله هدایت می‌شود که روی سرورهای داخلی پایدار است.
-            </div>
+        <div class="space-y-3 text-xs md:text-sm">
+          <div class="p-3.5 rounded-2xl glass-subcard">
+            <b class="text-indigo-600 dark:text-indigo-400 block mb-1">۱. شکستن سنت نسیه و کارت‌به‌کارت:</b>
+            جایگزینی ریسک تلگرام با سیستم دخل امانت؛ تا کالا پست نشه پولی جابه‌جا نمیشه.
           </div>
-
-          <div class="glass-card p-4 rounded-xl flex items-start gap-3">
-            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold shrink-0">۲</span>
-            <div>
-              <strong class="text-white block mb-0.5">دسترسی کامل به قفسه همکاران:</strong>
-              فروشنده از داخل ربات بله می‌بیند چه کسی در کجای ایران کالا را موجود دارد، قیمت عمده را چک می‌کند و سفارش مشتری را ثبت می‌کند.
-            </div>
+          <div class="p-3.5 rounded-2xl glass-subcard">
+            <b class="text-indigo-600 dark:text-indigo-400 block mb-1">۲. دسترسی به جای انبارداری شخصی:</b>
+            لازم نیست صاحب ۱۰۰۰ تا جنس باشی؛ کافیه به قفسه همکارانت دسترسی برخط داشته باشی.
           </div>
-
-          <div class="glass-card p-4 rounded-xl flex items-start gap-3">
-            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold shrink-0">۳</span>
-            <div>
-              <strong class="text-white block mb-0.5">تسویه امن شتابی با درگاه بله:</strong>
-              چون «بله» متصل به زیرساخت بانکی است، مشتری با لینک معتبر درون بله پرداخت را انجام می‌دهد و پول در دخل امن هم‌بار نگهداری می‌شود.
-            </div>
+          <div class="p-3.5 rounded-2xl glass-subcard">
+            <b class="text-indigo-600 dark:text-indigo-400 block mb-1">۳. هر پیج، یک میکروانبار محلی:</b>
+            حذف بنکدار انحصارطلب بازار بزرگ؛ هر فروشنده در شهر خودش یک نقطه توزیع سریع و قابل اعتماده.
+          </div>
+          <div class="p-3.5 rounded-2xl glass-subcard">
+            <b class="text-indigo-600 dark:text-indigo-400 block mb-1">۴. قیاس اسنپی (Matching):</b>
+            همون‌طور که اسنپ مسافر رو به نزدیک‌ترین راننده وصل می‌کنه، هم‌بار سفارش رو به سریع‌ترین قفسه همکار می‌رسونه.
           </div>
         </div>
       </div>
 
     </section>
 
-    <!-- ==================== تب ۳: پاسخ به ۸ پرسش اساسی (FAQ) ==================== -->
-    <section id="content-faq" class="tab-content hidden space-y-6">
-      
-      <div class="text-center space-y-2">
-        <h2 class="text-2xl font-black text-white">پاسخ به ۸ سوال اساسی</h2>
-        <p class="text-xs text-slate-400">بدون کلی‌گویی و فرمول‌های خشک؛ همان چالش‌هایی که در دایرکت پیش می‌آید</p>
+    <!-- ۷. پاسخ به ۸ چالش و پرسش اساسی (با زبان دایرکت و بازار) -->
+    <section class="glass-panel p-6 md:p-10 rounded-3xl space-y-6 border-t-4 border-t-purple-500">
+      <div class="border-b border-slate-200 dark:border-slate-800 pb-4 flex justify-between items-center">
+        <div>
+          <span class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider">ارزیابی بلوغ ایده</span>
+          <h3 class="text-lg md:text-2xl font-black mt-1 text-slate-900 dark:text-white">پاسخ به ۸ سوال اساسی: از کجا مطمئنیم این ایده جواب میده؟</h3>
+        </div>
+        <span class="text-xs font-mono bg-purple-500/15 text-purple-600 dark:text-purple-300 px-3.5 py-1.5 rounded-full border border-purple-500/30 font-bold">8 Key Pillars</span>
       </div>
 
-      <div class="space-y-3">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         
-        <!-- پرسش ۱ -->
-        <details class="glass-card rounded-2xl p-4 group">
-          <summary class="font-bold text-sm text-slate-200 cursor-pointer flex items-center justify-between">
-            <span>۱. مگه چقدر مشتری به خاطر «تموم کردیم» می‌پره؟ واقعاً درد بزرگیه؟</span>
-            <span class="text-emerald-400 text-xs">باز کردن ▾</span>
-          </summary>
-          <div class="mt-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
-            <strong>صحنه دایرکت:</strong> روزی ده بار تایپ می‌کنی: «عزیزم شرمنده سایز ۳۸ تموم شد، مشکیش رو بدم؟» و مشتری حتی سین هم نمی‌کنه. آمارهای مستند نشان میده بین ۳۰ تا ۳۵ درصد ورودی‌های قطعی خرید، به خاطر کسری یک رنگ یا سایز خاص می‌سوزند. تو پول تبلیغ و عکاسی رو دادی، ولی سود به خاطر خالی بودن قفسه می‌پره!
-          </div>
-        </details>
-
-        <!-- پرسش ۲ -->
-        <details class="glass-card rounded-2xl p-4 group">
-          <summary class="font-bold text-sm text-slate-200 cursor-pointer flex items-center justify-between">
-            <span>۲. فروشنده‌ها چطور به هم اعتماد کنند و کلاه سر هم نذارند؟</span>
-            <span class="text-emerald-400 text-xs">باز کردن ▾</span>
-          </summary>
-          <div class="mt-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
-            ما اعتماد رو از حالت «رفاقتی و نسیه» خارج کردیم و انداختیم گردن سیستم هوشمند. مشتری پول رو میده، پول توی صندوق امانت هم‌بار فریز میشه. تا پول تأیید نشه به همکارت نمیگیم بفرست، و تا کد پیگیری پست ثبت نشه پول همکارت آزاد نمیشه. هیچ‌کس ریسک چک و کارت‌به‌کارت نداره.
-          </div>
-        </details>
-
-        <!-- پرسش ۳ -->
-        <details class="glass-card rounded-2xl p-4 group">
-          <summary class="font-bold text-sm text-slate-200 cursor-pointer flex items-center justify-between">
-            <span>۳. اگر اول کار تعداد آنلاین‌شاپ‌ها کم باشه چی؟ (مرغ و تخم‌مرغ)</span>
-            <span class="text-emerald-400 text-xs">باز کردن ▾</span>
-          </summary>
-          <div class="mt-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
-            ما اول کار کل بازار ایران رو یکجا نمی‌گیریم؛ از یک راسته تخصصی (مثلاً راسته کفش‌فروش‌های تهران و تبریز یا پوشاک قشم) با ۲۰ فروشنده منتخب و فعال شروع می‌کنیم. وقتی بار این ۲۰ نفر به هم گره بخوره و طعم سود بی‌دردسر رو بچشند، خود موجودی اون‌ها بقیه بازار رو مگنت می‌کنه.
-          </div>
-        </details>
-
-        <!-- پرسش ۴ -->
-        <details class="glass-card rounded-2xl p-4 group">
-          <summary class="font-bold text-sm text-slate-200 cursor-pointer flex items-center justify-between">
-            <span>۴. اگه همکار جنس فیک، لکه‌دار یا اشتباه بفرسته و آبروی پیج بره چی؟</span>
-            <span class="text-emerald-400 text-xs">باز کردن ▾</span>
-          </summary>
-          <div class="mt-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
-            سیستم دارای امتیاز کارما (اعتبار) و بیمه مرجوعیه. مشتری ۴۸ ساعت مهلت تست داره. اگر کالا معیوب بود، پول مشتری بلافاصله عودت داده میشه، هزینه خسارت از حساب تامین‌کننده خطاکار کسر شده و بعد از ۲ بار تکرار، دسترسی پیج متخلف به انبار بقیه برای همیشه بسته میشه.
-          </div>
-        </details>
-
-        <!-- پرسش ۵ -->
-        <details class="glass-card rounded-2xl p-4 group">
-          <summary class="font-bold text-sm text-slate-200 cursor-pointer flex items-center justify-between">
-            <span>۵. درآمد خود پلتفرم «هم‌بار» از کجاست؟</span>
-            <span class="text-emerald-400 text-xs">باز کردن ▾</span>
-          </summary>
-          <div class="mt-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
-            هیچ هزینه ثبت‌نام، آبونمان ماهانه یا پول ثابتی وجود ندارد! فقط یک کارمزد ناچیز (۳ تا ۵ درصد) روی فروش‌های موفق برداشته میشه. یعنی اگر فروشی به دست نیاد، صفر ریال خرج کردی. پرداخت ۵ درصد روی فروشی که قرار بود ۱۰۰ درصدش بسوزه، برای فروشنده یک برد بزرگه.
-          </div>
-        </details>
-
-        <!-- پرسش ۶ -->
-        <details class="glass-card rounded-2xl p-4 group">
-          <summary class="font-bold text-sm text-slate-200 cursor-pointer flex items-center justify-between">
-            <span>۶. چرا فروشنده‌ها بعد از یک بار کار کردن، هم‌بار رو دور نمی‌زنن؟</span>
-            <span class="text-emerald-400 text-xs">باز کردن ▾</span>
-          </summary>
-          <div class="mt-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
-            اولاً مشخصات تماس مستقیم روی کارتن‌ها درج نمیشه و ارسال محرمانه‌ست. ثانیاً یک پیج در ماه ممکنه ۵۰ تا کسری داشته باشه که پیش ۳۰ فروشنده مختلفه؛ هیچ ادمینی وقت نداره روزی ۳ ساعت چانه‌زنی و دغدغه واریز کارت‌به‌کارت با ۳۰ نفر راه بندازه. آرامش و امنیت سیستم هم‌بار می‌ارزه به کارمزد جزئیش.
-          </div>
-        </details>
-
-        <!-- پرسش ۷ -->
-        <details class="glass-card rounded-2xl p-4 group">
-          <summary class="font-bold text-sm text-slate-200 cursor-pointer flex items-center justify-between">
-            <span>۷. ارسال با پست و تیپاکس چطور هماهنگ میشه که کار گره نخوره؟</span>
-            <span class="text-emerald-400 text-xs">باز کردن ▾</span>
-          </summary>
-          <div class="mt-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
-            به محض ثبت خرید، یک لیبل استاندارد پستی تولید و برای تامین‌کننده ارسال میشه. اون فقط پرینت می‌کنه، روی کارتن می‌چسبونه و به باجه میده. سیستم ما وب‌سرویس مستقیم رهگیری پستی داره؛ یعنی به محض خوردن مهر پست، کد رهگیری خودکار برای مشتری پیامک میشه با اسم پیج اصلی.
-          </div>
-        </details>
-
-        <!-- پرسش ۸ -->
-        <details class="glass-card rounded-2xl p-4 group">
-          <summary class="font-bold text-sm text-slate-200 cursor-pointer flex items-center justify-between">
-            <span>۸. چرا دیجی‌کالا یا باسلام نمی‌تونن این کار رو برای پیج‌ها انجام بدن؟</span>
-            <span class="text-emerald-400 text-xs">باز کردن ▾</span>
-          </summary>
-          <div class="mt-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
-            چون دیجی‌کالا و باسلام بازارگاه‌های علنی هستند و مشتری مال اون‌هاست؛ اما هم‌بار یک «انبار و زیرساخت مخفی پشت‌صحنه» است. ما هیچ فروشگاهی نداریم که مشتری ببینه. ما اعتبار، نام برند و ارتباط مستقیم پیج با مشتریش رو تمام‌وکمال حفظ می‌کنیم.
-          </div>
-        </details>
-
-      </div>
-    </section>
-
-    <!-- ==================== تب ۴: ماشین‌حساب چرتکه سود ==================== -->
-    <section id="content-calc" class="tab-content hidden space-y-6">
-      
-      <div class="text-center space-y-2">
-        <h2 class="text-2xl font-black text-white">چرتکه سود: ماهی چقدر به خاطر "نداریم" ضرر می‌کنی؟</h2>
-        <p class="text-xs text-slate-400">با اسلایدرهای زیر وضعیت پیجت رو تنظیم کن و ببین هم‌بار چقدر برات پول زنده می‌کنه</p>
-      </div>
-
-      <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-2xl mx-auto space-y-6 border border-emerald-500/20">
-        
-        <!-- ورودی ۱ -->
-        <div class="space-y-2">
-          <div class="flex justify-between text-xs sm:text-sm">
-            <span class="text-slate-300">تعداد استعلام‌های دایرکت در ماه:</span>
-            <span id="val-directs" class="font-bold text-emerald-400">۳۰۰ استعلام</span>
-          </div>
-          <input type="range" id="input-directs" min="50" max="2000" step="50" value="300" class="w-full accent-emerald-500 bg-slate-800 rounded-lg cursor-pointer">
-        </div>
-
-        <!-- ورودی ۲ -->
-        <div class="space-y-2">
-          <div class="flex justify-between text-xs sm:text-sm">
-            <span class="text-slate-300">میانگین قیمت هر محصول (تومان):</span>
-            <span id="val-price" class="font-bold text-emerald-400">۶۰۰,۰۰۰ تومان</span>
-          </div>
-          <input type="range" id="input-price" min="200000" max="3000000" step="50000" value="600000" class="w-full accent-emerald-500 bg-slate-800 rounded-lg cursor-pointer">
-        </div>
-
-        <!-- ورودی ۳ -->
-        <div class="space-y-2">
-          <div class="flex justify-between text-xs sm:text-sm">
-            <span class="text-slate-300">میانگین حاشیه سود خالص شما:</span>
-            <span id="val-margin" class="font-bold text-emerald-400">۲۵٪ سود</span>
-          </div>
-          <input type="range" id="input-margin" min="10" max="60" step="5" value="25" class="w-full accent-emerald-500 bg-slate-800 rounded-lg cursor-pointer">
-        </div>
-
-        <!-- نتیجه باکس -->
-        <div class="bg-slate-900/90 border border-emerald-500/30 rounded-2xl p-5 text-center space-y-3">
-          <span class="text-xs text-slate-400">سود بادآورده و زنده‌شده توسط هم‌بار در ماه:</span>
-          <div id="result-profit" class="text-3xl sm:text-4xl font-black text-emerald-400">
-            ۱۵,۷۵۰,۰۰۰ تومان
-          </div>
-          <p class="text-[11px] text-slate-400 leading-normal">
-            (این مبلغ پولی است که قبلاً به خاطر ناقص بودن سایزها مستقیم می‌رفت توی جیب رقبایتان!)
+        <div class="p-5 rounded-2xl glass-subcard border-r-4 border-r-purple-500 space-y-2">
+          <h4 class="text-purple-600 dark:text-purple-400 font-extrabold text-sm md:text-base">۱. واقعاً چقدر مشتری به خاطر «تموم کردیم» می‌پره؟</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            آمار فروش آنلاین نشان میده بین ۳۰ تا ۳۵ درصد ورودی‌های خرید دایرکت به خاطر کسری رنگ یا سایز خاص از بین میرن. پیج‌ها هزینه تبلیغات رو دادن ولی پول نقد رو رد می‌کنند.
           </p>
         </div>
 
+        <div class="p-5 rounded-2xl glass-subcard border-r-4 border-r-purple-500 space-y-2">
+          <h4 class="text-purple-600 dark:text-purple-400 font-extrabold text-sm md:text-base">۲. چرا فروشنده‌ها باید به هم اعتماد کنند و کلاهبرداری نشه؟</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            اعتماد بر پایه رفاقت نیست؛ بر پایه دخل امانت هوشمنده. تا پول خریدار فریز نشه به همکار نمیگیم بسته ببندد، و تا کد رهگیری پست ثبت نشه سهم همکار آزاد نمیشه.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard border-r-4 border-r-purple-500 space-y-2">
+          <h4 class="text-purple-600 dark:text-purple-400 font-extrabold text-sm md:text-base">۳. اگه اولش تعداد آنلاین‌شاپ‌ها کم باشه چی؟ (مرغ و تخم‌مرغ)</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            از کل ایران شروع نمی‌کنیم؛ ابتدا از یک راسته مشخص (مثلاً فقط صنف کیف و کفش زنانه با ۲۰ پیج منتخب پرفروش) لانچ می‌کنیم. وقتی بار این‌ها به هم وصل شد، خود سودآوری بقیه رو جذب می‌کنه.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard border-r-4 border-r-purple-500 space-y-2">
+          <h4 class="text-purple-600 dark:text-purple-400 font-extrabold text-sm md:text-base">۴. اگه همکار جنس فیک یا معیوب فرستاد و آبروی پیج رفت چی؟</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            مشتری ۴۸ ساعت فرصت تست دارد. در صورت مغایرت یا عیب، وجه مسترد و خسارت از حساب تامین‌کننده خاطی کسر می‌شود؛ پس از ۲ خطا، پیج خاطی برای همیشه از شبکه حذف خواهد شد.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard border-r-4 border-r-purple-500 space-y-2">
+          <h4 class="text-purple-600 dark:text-purple-400 font-extrabold text-sm md:text-base">۵. درآمد خود هم‌بار از کجاست؟</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            هیچ هزینه عضویت یا شارژ ماهیانه وجود ندارد! فقط ۳ تا ۵ درصد کارمزد روی تراکنش‌های موفق دریافت می‌شود. پرداخت ۵ درصد روی پولی که قرار بود ۱۰۰ درصدش بسوزه، کاملاً به صرفه است.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard border-r-4 border-r-purple-500 space-y-2">
+          <h4 class="text-purple-600 dark:text-purple-400 font-extrabold text-sm md:text-base">۶. چرا فروشنده‌ها هم‌بار رو دور نمی‌زنن تا مستقیم با هم کار کنند؟</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            ارسال با لیبل اختصاصی است و اطلاعات مستقیم مبادله نمیشه؛ از اون مهم‌تر، هیچ ادمینی وقت نداره روزی با ۳۰ نفر تماس بگیره و سر کارت‌به‌کارت و چک کردن فاکتور چانه‌زنی کنه.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard border-r-4 border-r-purple-500 space-y-2">
+          <h4 class="text-purple-600 dark:text-purple-400 font-extrabold text-sm md:text-base">۷. پست و تیپاکس چطور هماهنگ میشه که کار گره نخوره؟</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            تأمین‌کننده فقط لیبل پرینت‌شده سامانه رو روی کارتن می‌چسبونه و به باجه میده. با ثبت بارکد در اداره پست، پیامک رهگیری اتوماتیک با نام پیج اصلی برای مشتری پیامک میشه.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard border-r-4 border-r-purple-500 space-y-2">
+          <h4 class="text-purple-600 dark:text-purple-400 font-extrabold text-sm md:text-base">۸. چرا دیجی‌کالا یا باسلام نمی‌تونن این کار رو بکنن؟</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            چون دیجی‌کالا و باسلام بازارگاه عمومی هستند و مشتری رو از پیج می‌دزدند؛ اما هم‌بار یک «انبار مخفی پشت‌پرده» است و خریدار حتی روحش هم خبردار نمیشه که هم‌بار وجود داره!
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- بخش دوم: برگ برنده ایرانی: سپر بقا (Survival Mode)       -->
+  <!-- ========================================================= -->
+  <main id="view-survival" class="hidden flex-grow max-w-7xl mx-auto px-4 py-8 md:py-10 space-y-12 w-full">
+    
+    <!-- بنر اصلی قابلیت سپر بقا -->
+    <section class="glass-panel rounded-3xl p-6 md:p-10 lg:p-12 relative overflow-hidden transition-all-custom border-t-4 border-t-emerald-500 shadow-2xl">
+      <div class="max-w-4xl space-y-6 relative z-10">
+        
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs md:text-sm font-bold bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+          ⚡ لایه تاب‌آوری زیرساختی (Resilience Layer) — اختصاصی بازار ایران
+        </div>
+
+        <h1 class="text-2xl md:text-4xl lg:text-5xl font-black leading-snug md:leading-tight tracking-tight text-slate-900 dark:text-white">
+          «سپر بقا» (Survival Mode)؛ <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-300">
+            وقتی اینستاگرام می‌خوابد، قفسه و دخل شما زنده می‌ماند!
+          </span>
+        </h1>
+
+        <p class="text-slate-600 dark:text-slate-300 text-sm md:text-base lg:text-lg leading-relaxed">
+          بزرگ‌ترین کابوس فروشندگان اینستاگرامی در ایران، وابستگی به اینترنت بین‌الملل است. با هر اختلال یا فیلترینگ، فروش صفر می‌شود و کسب‌وکار به لبه نابودی می‌رسد. رقبای خارجی مثل Stockly فرانسه هرگز چنین مشکلی ندارند چون اینترنتشان قطع نمی‌شود! «هم‌بار» برای اولین بار در ایران مجهز به **«بازوی هوشمند بله»** شده تا حتی در خاموشی مطلق اینترنت بین‌الملل، تبادل موجودی و تسویه شتابی ادامه پیدا کند.
+        </p>
+
+        <!-- مقایسه تمایز بین‌المللی -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div class="p-5 rounded-2xl glass-subcard border-r-4 border-r-slate-400 space-y-2">
+            <b class="text-slate-800 dark:text-slate-200 text-sm md:text-base block">مدل خارجی (Stockly فرانسه):</b>
+            <p class="text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              وابسته به زیرساخت ابری پایدار اروپا، کارت‌های ویزا/مستر و شبکه‌های اجتماعی آزاد. در شرایط اختلال اینترنت در ایران، ۱۰۰٪ کارایی خود را از دست می‌دهد.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl glass-subcard border-r-4 border-r-emerald-500 space-y-2">
+            <b class="text-emerald-600 dark:text-emerald-400 text-sm md:text-base block">نوآوری بومی «هم‌بار»:</b>
+            <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              اتصال مستقیم به شبکه ملی اطلاعات از طریق پیام‌رسان مالی «بله»؛ دسترسی به قفسه مشترک و کیف‌پول بانکی حتی هنگام قطع ترافیک خارجی.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- جزئیات کارکرد سپر بقا روی بازوی بله -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div class="glass-panel p-6 rounded-3xl border-t-4 border-t-teal-500 space-y-3">
+        <div class="w-11 h-11 rounded-2xl bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center text-xl font-black">
+          🤖
+        </div>
+        <h4 class="font-bold text-base md:text-lg text-slate-900 dark:text-white">۱. بازوی هوشمند روی پیام‌رسان بله</h4>
+        <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          فروشنده نیازی به فیلترشکن ندارد. از طریق بات رسمی هم‌بار در بله، موجودی قفسه همکاران را جستجو کرده و سفارش را برای انبار ثبت می‌کند.
+        </p>
+      </div>
+
+      <div class="glass-panel p-6 rounded-3xl border-t-4 border-t-emerald-500 space-y-3">
+        <div class="w-11 h-11 rounded-2xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl font-black">
+          💳
+        </div>
+        <h4 class="font-bold text-base md:text-lg text-slate-900 dark:text-white">۲. لینک پرداخت امن متصل به شتاب</h4>
+        <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          چون بله متصل به شبکه بانکی کشور است، لینک پرداخت امن درون‌برنامه‌ای برای مشتری پیامک یا ارسال می‌شود و پول مستقیماً در دخل امن قفل می‌گردد.
+        </p>
+      </div>
+
+      <div class="glass-panel p-6 rounded-3xl border-t-4 border-t-indigo-500 space-y-3">
+        <div class="w-11 h-11 rounded-2xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-black">
+          🛡️
+        </div>
+        <h4 class="font-bold text-base md:text-lg text-slate-900 dark:text-white">۳. تاب‌آوری تضمین‌شده در ارائه</h4>
+        <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          این قابلیت اثبات می‌کند که هم‌بار یک کپی ساده غربی نیست؛ بلکه پاسخی مهندسی‌شده و مستند به بزرگ‌ترین بحران ساختاری کسب‌وکارهای آنلاین ایران است.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- بخش سوم: تحلیل بازار و رقبا                               -->
+  <!-- ========================================================= -->
+  <main id="view-market" class="hidden flex-grow max-w-7xl mx-auto px-4 py-8 md:py-10 space-y-12 w-full">
+    
+    <!-- ۱. اندازه بازار -->
+    <section class="glass-panel p-6 md:p-10 rounded-3xl space-y-6 border-r-4 border-r-blue-500">
+      <div class="border-b border-slate-200 dark:border-slate-800 pb-4 flex justify-between items-center">
+        <div>
+          <span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">تحلیل بازار دایرکت و سوشال‌کامرس ایران</span>
+          <h3 class="text-lg md:text-2xl font-black mt-1 text-slate-900 dark:text-white">اندازه بازار (Market Size) و پرسونای مخاطب هدف</h3>
+        </div>
+        <span class="text-xs font-mono bg-blue-500/15 text-blue-600 dark:text-blue-300 px-3.5 py-1 rounded-full font-bold">TAM & SAM Analysis</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-5 rounded-2xl glass-subcard space-y-1.5 border-t-2 border-t-blue-500 text-center">
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-bold">کل بازار در دسترس (TAM)</div>
+          <div class="text-xl md:text-2xl font-black text-blue-600 dark:text-blue-400 font-mono">۸۸.۸ همت</div>
+          <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">گردش مالی سالانه تجارت در شبکه‌های اجتماعی کشور</p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard space-y-1.5 border-t-2 border-t-brand-500 text-center">
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-bold">فروشگاه‌های فعال مبتلا‌به (SAM)</div>
+          <div class="text-xl md:text-2xl font-black text-brand-600 dark:text-brand-400 font-mono">۱۳۰,۰۰۰ فروشگاه</div>
+          <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">پیج‌های دارای تراکنش مستمر ۵ تا ۵۰ بسته در روز</p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard space-y-1.5 border-t-2 border-t-teal-500 text-center">
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-bold">ارزش سفارش‌های سوخته ناشی از کسری (SOM)</div>
+          <div class="text-xl md:text-2xl font-black text-teal-600 dark:text-teal-400 font-mono">۱۵.۵ همت</div>
+          <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">حداقل ۲۰٪ استعلام‌های قطعی که به علت عدم موجودی لغو می‌شوند</p>
+        </div>
+      </div>
+
+      <div class="p-5 rounded-2xl glass-subcard space-y-2 text-sm">
+        <h4 class="font-bold text-slate-900 dark:text-white text-sm md:text-base flex items-center gap-2">
+          <span>👤</span> پرسونای واقعی مخاطب هدف:
+        </h4>
+        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+          «مریم، مدیر پیج پوشاک با ۲۵ هزار فالوور در شیراز». مریم روزانه ۱۰ مرسوله پستی دارد. سرمایه در گردش او اجازه نمی‌دهد تمام رنگ‌ها در تمام سایزها را خریداری و دپو کند. در نتیجه روزانه ۳ الی ۴ مشتری دایرکت را به دلیل نداشتن سایز لارج یا رنگ خاص از دست می‌دهد و بودجه تبلیغات او عملاً هدر می‌رود.
+        </p>
+      </div>
+    </section>
+
+    <!-- ۲. کالبدشکافی رقبا -->
+    <section class="glass-panel p-6 md:p-10 rounded-3xl space-y-6 border-r-4 border-r-violet-500">
+      <div class="border-b border-slate-200 dark:border-slate-800 pb-4 flex justify-between items-center">
+        <div>
+          <span class="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wider">کالبدشکافی بازار</span>
+          <h3 class="text-lg md:text-2xl font-black mt-1 text-slate-900 dark:text-white">بقیه چه کار می‌کنند و تفاوت ما چیست؟</h3>
+        </div>
+        <span class="text-xs font-mono bg-violet-500/15 text-violet-600 dark:text-violet-300 px-3.5 py-1 rounded-full font-bold">Competitor Benchmark</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-5 rounded-2xl glass-subcard space-y-2.5 border-t-2 border-t-violet-500">
+          <h4 class="font-bold text-sm md:text-base text-slate-900 dark:text-white">Stockly فرانسه (مدل جهانی)</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            استارتاپ فرانسوی با ۵۰+ میلیون یورو سرمایه‌گذاری که انبارهای بزرگ را به هم وصل کرده. نقطه ضعف برای ایران: نیازمند شرکت رسمی و ثبت مالیاتی اروپاست و هیچ راهکاری برای قطعی اینترنت ندارد.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard space-y-2.5 border-t-2 border-t-teal-500">
+          <h4 class="font-bold text-sm md:text-base text-slate-900 dark:text-white">دراپ‌شیپینگ سنتی (شاپفا / جانبی)</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            رابطه یک‌طرفه است؛ پیج فقط می‌تواند کالای یک واردکننده بزرگ را بفروشد و امکان ندارد جنس‌های مازاد خودش را به اشتراک بگذارد یا از قفسه سایر همکاران استفاده کند.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard space-y-2.5 border-t-2 border-t-brand-500">
+          <h4 class="font-bold text-sm md:text-base text-slate-900 dark:text-white">هم‌بار (ایده نوآورانه ما)</h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            شبکه دوطرفه همتا‌به‌همتا (P2P) با تسویه امانی، ارسال محرمانه با برند خود پیج و مجهز به حالت بقا روی بله برای ادامه فروش در شرایط فیلترینگ و قطعی شبکه.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ۳. جدول ماتریس مقایسه -->
+    <section class="glass-panel p-6 md:p-10 rounded-3xl space-y-6 border-r-4 border-r-amber-500">
+      <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+        <h3 class="text-lg md:text-2xl font-black text-slate-900 dark:text-white">جدول مقایسه مستقیم در یک نگاه</h3>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-right text-xs md:text-sm">
+          <thead class="bg-slate-200/70 dark:bg-slate-900/90 text-slate-800 dark:text-white border-b border-slate-300 dark:border-slate-800 font-bold">
+            <tr>
+              <th class="p-3.5">ویژگی کلیدی</th>
+              <th class="p-3.5 text-brand-600 dark:text-brand-400 font-extrabold">هم‌بار (ایده ما)</th>
+              <th class="p-3.5">Stockly فرانسه</th>
+              <th class="p-3.5">دراپ‌شیپینگ سنتی</th>
+              <th class="p-3.5">گروه‌های تبادل تلگرام</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+            <tr>
+              <td class="p-3.5 font-bold text-slate-900 dark:text-white">مدل تبادل کالا</td>
+              <td class="p-3.5 text-brand-600 dark:text-brand-400 font-bold">همتا‌به‌همتا (P2P خرد)</td>
+              <td class="p-3.5">B2B کلان شرکتی</td>
+              <td class="p-3.5">تک‌تأمین‌کننده به خرد</td>
+              <td class="p-3.5 text-amber-600 dark:text-amber-400">آشفته و بدون نظم</td>
+            </tr>
+            <tr>
+              <td class="p-3.5 font-bold text-slate-900 dark:text-white">تسویه امن (دخل امانت)</td>
+              <td class="p-3.5 text-brand-600 dark:text-brand-400 font-bold">دارد (با کد رهگیری پست)</td>
+              <td class="p-3.5">دارد (اعتبارات بانکی)</td>
+              <td class="p-3.5 text-rose-600 dark:text-rose-400">ندارد (تسویه ماهانه)</td>
+              <td class="p-3.5 text-rose-600 dark:text-rose-400">ندارد (کارت‌به‌کارت پرریسک)</td>
+            </tr>
+            <tr>
+              <td class="p-3.5 font-bold text-slate-900 dark:text-white">سپر بقا در قطعی اینترنت</td>
+              <td class="p-3.5 text-brand-600 dark:text-brand-400 font-bold">دارد (بازوی اختصاصی بله)</td>
+              <td class="p-3.5 text-rose-600 dark:text-rose-400">ندارد (نیاز ندارند)</td>
+              <td class="p-3.5 text-rose-600 dark:text-rose-400">ندارد</td>
+              <td class="p-3.5 text-rose-600 dark:text-rose-400">ندارد (تلگرام فیلتر است)</td>
+            </tr>
+            <tr>
+              <td class="p-3.5 font-bold text-slate-900 dark:text-white">ارسال به نام پیج شما</td>
+              <td class="p-3.5 text-brand-600 dark:text-brand-400 font-bold">تضمین ۱۰۰٪ هویت شما</td>
+              <td class="p-3.5">دارد</td>
+              <td class="p-3.5 text-slate-500">با نام تأمین‌کننده</td>
+              <td class="p-3.5 text-rose-600 dark:text-rose-400">خطر سرقت مشتری!</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ۴. چرا تا حالا کسی در ایران این رو نساخته بود؟ -->
+    <section class="glass-panel p-6 md:p-10 rounded-3xl space-y-6 border-r-4 border-r-rose-600">
+      <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+        <span class="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider">برهان قاطع در دفاعیه</span>
+        <h3 class="text-lg md:text-2xl font-black mt-1 text-slate-900 dark:text-white">چرا تا حالا هیچ‌کس در ایران این ایده رو پیاده نکرده بود؟</h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+        <div class="p-5 rounded-2xl glass-subcard space-y-2 border-t-4 border-t-amber-500">
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm md:text-base flex items-center gap-2">
+            <span>🏛️</span> ۱. بازار غیررسمی پیج‌ها و ترس از مالیات
+          </h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            مدل‌های غربی بر اتصال دفاتر مالیاتی رسمی استوارند. در ایران پیج‌ها شرکت ثبت‌شده ندارند و پلتفرم‌های سنتی جرات نکردند وارد معاملات غیررسمی شوند.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard space-y-2 border-t-4 border-t-rose-500">
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm md:text-base flex items-center gap-2">
+            <span>💳</span> ۲. سختی راه‌اندازی حساب امانی (Escrow)
+          </h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            بانک مرکزی به کسب‌وکارهای خرد سرویس نگهداری امانی پول نمی‌داد؛ هم‌بار این گره را با کیف‌پول داخلی تسهیم‌شده و وب‌هوک وضعیت پستی باز کرده است.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard space-y-2 border-t-4 border-t-indigo-500">
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm md:text-base flex items-center gap-2">
+            <span>📦</span> ۳. عدم اتصال وب‌سرویس باجه‌های پستی
+          </h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            در گذشته سامانه‌ای برای استعلام آنی ارسال کالا نبود؛ الزام بارکد ۲۴ رقمی پست پیشتاز این مانع را برای هم‌بار کاملاً برطرف ساخته است.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-subcard space-y-2 border-t-4 border-t-purple-500">
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm md:text-base flex items-center gap-2">
+            <span>⚡</span> ۴. ترس از فیلترینگ و قطعی شبکه
+          </h4>
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            سرمایه‌گذاران از ساخت ابزارهای اینستاگرامی می‌ترسیدند. هم‌بار با طراحی چندسکویی و پشتیبانی از بله در حالت بقا، ریسک را به صفر رسانده است.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- بخش چهارم: شبیه‌ساز عملیاتی و MVP                          -->
+  <!-- ========================================================= -->
+  <main id="view-mvp" class="hidden flex-grow max-w-7xl mx-auto px-4 py-8 md:py-10 space-y-12 w-full">
+    
+    <!-- راهنما و کنترل‌های شبیه‌ساز -->
+    <div class="glass-panel p-6 md:p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-5 border-r-4 border-r-brand-500">
+      <div>
+        <h2 class="text-lg md:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2.5">
+          <span class="w-3 h-3 rounded-full bg-brand-500 animate-ping"></span>
+          شبیه‌ساز زنده فرآیند هم‌بار (MVP Interactive Demo)
+        </h2>
+        <p class="text-xs md:text-sm text-slate-600 dark:text-slate-400 mt-1.5">
+          مراحل عملیاتی: استعلام کالای کسری ➔ اتصال به قفسه همکار ➔ قفل امن وجه در دخل ➔ ثبت بارکد پستی ➔ تسویه خودکار سود.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2.5 shrink-0">
+        <button onclick="showRegisterModal()" class="px-4 py-2.5 bg-gradient-to-r from-brand-600 to-teal-600 hover:opacity-95 text-white rounded-xl text-xs md:text-sm font-bold shadow transition">
+          + ثبت کالای مازاد جدید
+        </button>
+        <button onclick="resetData()" class="px-3.5 py-2.5 border border-slate-300 dark:border-slate-700 text-xs md:text-sm rounded-xl font-medium hover:bg-slate-200/50 dark:hover:bg-slate-800 text-slate-700 dark:text-white transition">
+          بازنشانی داده‌ها
+        </button>
+      </div>
+    </div>
+
+    <!-- داشبورد شاخص‌های کلیدی عملکرد (KPIs) -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="glass-panel p-5 rounded-2xl border-b-4 border-b-blue-500">
+        <div class="text-xs text-slate-500 dark:text-slate-400 font-bold">اقلام متصل در کاتالوگ ابری</div>
+        <div id="stat-total-items" class="text-xl md:text-2xl font-black mt-1 text-blue-600 dark:text-blue-400 font-mono">۵ کالا</div>
+      </div>
+      <div class="glass-panel p-5 rounded-2xl border-b-4 border-b-brand-500">
+        <div class="text-xs text-slate-500 dark:text-slate-400 font-bold">دایرکت‌های نجات‌یافته امروز</div>
+        <div class="text-xl md:text-2xl font-black text-brand-600 dark:text-brand-400 mt-1 font-mono">۴ مورد</div>
+      </div>
+      <div class="glass-panel p-5 rounded-2xl border-b-4 border-b-teal-500">
+        <div class="text-xs text-slate-500 dark:text-slate-400 font-bold">ارزش کل مبادلات حفظ‌شده</div>
+        <div class="text-xl md:text-2xl font-black text-teal-600 dark:text-teal-400 mt-1 font-mono">۱,۸۵۰,۰۰۰ تومان</div>
+      </div>
+      <div class="glass-panel p-5 rounded-2xl border-b-4 border-b-amber-500">
+        <div class="text-xs text-slate-500 dark:text-slate-400 font-bold">درآمد کارمزد هم‌بار (۳٪)</div>
+        <div class="text-xl md:text-2xl font-black text-amber-600 dark:text-amber-400 mt-1 font-mono">۵۵,۵۰۰ تومان</div>
+      </div>
+    </div>
+
+    <!-- چرتکه سود زنده -->
+    <section class="glass-panel p-6 md:p-8 rounded-3xl space-y-6 border-r-4 border-r-indigo-500">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div>
+          <h3 class="font-bold text-base md:text-lg text-slate-900 dark:text-white flex items-center gap-2">
+            <span>🧮</span> چرتکه سود: ماهی چقدر به خاطر "نداریم گفتن" ضرر می‌کنی؟
+          </h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">تخمین بزنید با هم‌بار چه میزان پولی که قرار بود بسوزد، به پیج شما بازمی‌گردد.</p>
+        </div>
+        <span class="text-xs font-mono bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 px-3 py-1 rounded-full font-bold">چرتکه زنده</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        <div class="md:col-span-7 space-y-4 text-xs md:text-sm">
+          <div class="p-4 rounded-2xl glass-subcard">
+            <div class="flex justify-between mb-2">
+              <span class="font-bold text-slate-800 dark:text-white">تعداد استعلام‌های لغوشده در روز به خاطر کسری:</span>
+              <strong id="calc-lost-label" class="text-brand-600 dark:text-brand-400 font-mono text-base">۲ سفارش</strong>
+            </div>
+            <input type="range" id="calc-lost-slider" min="1" max="15" value="2" oninput="updateCalculator()" class="w-full accent-brand-500 cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded-lg">
+          </div>
+          <div class="p-4 rounded-2xl glass-subcard">
+            <div class="flex justify-between mb-2">
+              <span class="font-bold text-slate-800 dark:text-white">میانگین مبلغ هر سفارش:</span>
+              <strong id="calc-price-label" class="text-teal-600 dark:text-teal-400 font-mono text-base">۲۵۰,۰۰۰ تومان</strong>
+            </div>
+            <input type="range" id="calc-price-slider" min="100000" max="1000000" step="50000" value="250000" oninput="updateCalculator()" class="w-full accent-teal-500 cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded-lg">
+          </div>
+        </div>
+
+        <div class="md:col-span-5 grid grid-cols-2 gap-3.5">
+          <div class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-center space-y-1">
+            <div class="text-[11px] text-rose-600 dark:text-rose-400 font-bold">فروش سوخته ماهانه</div>
+            <div id="calc-lost-total" class="text-base md:text-xl font-black text-rose-600 dark:text-rose-400 font-mono">۱۵,۰۰۰,۰۰۰ ت</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-center space-y-1">
+            <div class="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">سود زنده شده توسط هم‌بار</div>
+            <div id="calc-salvaged-profit" class="text-base md:text-xl font-black text-emerald-600 dark:text-emerald-400 font-mono">۴,۵۰۰,۰۰۰ ت</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- شبیه‌ساز عملیاتی دوطرفه -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- پنل فروشنده متقاضی -->
+      <div class="lg:col-span-5 glass-panel p-6 md:p-8 rounded-3xl space-y-5 border-t-4 border-t-indigo-500">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+          <h3 class="font-bold text-sm md:text-base text-slate-900 dark:text-white flex items-center gap-2">
+            <span class="w-6 h-6 rounded-xl bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-xs">۱</span>
+            جستجوی جنس کسری در قفسه همکاران
+          </h3>
+          <span class="text-[11px] bg-rose-500/15 text-rose-600 dark:text-rose-400 px-2.5 py-0.5 rounded-full font-bold">مشتری دایرکت منتظر است</span>
+        </div>
+
+        <p class="text-xs text-slate-600 dark:text-slate-300">برای آزمایش، یکی از سناریوهای آماده زیر را کلیک کنید:</p>
+
+        <!-- سناریوهای سریع -->
+        <div class="space-y-2.5">
+          <button onclick="fillRequestForm('هودی دورس پنبه‌ای مشکی L')" class="w-full text-right p-3 rounded-2xl glass-subcard hover:border-brand-500/50 transition flex items-center justify-between text-xs md:text-sm">
+            <span class="text-slate-800 dark:text-white font-medium">هودی دورس پنبه‌ای مشکی (L)</span>
+            <span class="text-brand-600 dark:text-brand-400 font-mono font-bold">۳۸۰,۰۰۰ ت</span>
+          </button>
+          <button onclick="fillRequestForm('ماگ سرامیکی مینیمال دست‌ساز')" class="w-full text-right p-3 rounded-2xl glass-subcard hover:border-brand-500/50 transition flex items-center justify-between text-xs md:text-sm">
+            <span class="text-slate-800 dark:text-white font-medium">ماگ سرامیکی مینیمال دست‌ساز</span>
+            <span class="text-teal-600 dark:text-teal-400 font-mono font-bold">۱۶۵,۰۰۰ ت</span>
+          </button>
+          <button onclick="fillRequestForm('کیف دوشی کتان مینیمال')" class="w-full text-right p-3 rounded-2xl glass-subcard hover:border-brand-500/50 transition flex items-center justify-between text-xs md:text-sm">
+            <span class="text-slate-800 dark:text-white font-medium">کیف دوشی کتان مینیمال</span>
+            <span class="text-indigo-600 dark:text-indigo-400 font-mono font-bold">۲۹۰,۰۰۰ ت</span>
+          </button>
+        </div>
+
+        <div class="flex gap-2 pt-1">
+          <input type="text" id="search-input" placeholder="نام کالای ناموجود را بنویسید..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs md:text-sm focus:outline-none focus:border-brand-500 text-slate-900 dark:text-white">
+          <button onclick="handleSearch()" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs md:text-sm rounded-xl transition shrink-0">
+            جستجو
+          </button>
+        </div>
+
+        <!-- نتیجه تطبیق کالا -->
+        <div id="match-result-container" class="hidden pt-3 border-t border-slate-200 dark:border-slate-800 space-y-3.5">
+          <div class="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+            ✓ جنس در قفسه همکار پیدا شد:
+          </div>
+          <div id="matched-card-content" class="p-4 rounded-2xl glass-subcard border-brand-500/40 space-y-2.5 text-xs md:text-sm"></div>
+          <button onclick="startEscrowFlow()" class="w-full py-3 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 text-white font-bold text-xs md:text-sm shadow hover:opacity-95 transition">
+            قفل امن وجه در دخل امانت هم‌بار (Escrow Lock)
+          </button>
+        </div>
+      </div>
+
+      <!-- پنل تسویه امانی و شبیه‌ساز پست -->
+      <div class="lg:col-span-7 glass-panel p-6 md:p-8 rounded-3xl space-y-5 border-t-4 border-t-brand-500">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+          <h3 class="font-bold text-sm md:text-base text-slate-900 dark:text-white flex items-center gap-2">
+            <span>🛡️</span> ماشین حالت دخل امانت و رهگیری پست
+          </h3>
+          <span id="escrow-badge" class="text-[11px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-0.5 rounded-full font-mono font-bold">وضعیت: آماده سفارش جدید</span>
+        </div>
+
+        <!-- گام‌ها -->
+        <div class="grid grid-cols-4 gap-2 text-center text-xs">
+          <div id="step-1" class="p-2.5 rounded-xl bg-brand-600 text-white font-bold shadow">۱. تطبیق</div>
+          <div id="step-2" class="p-2.5 rounded-xl bg-slate-200/80 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-medium">۲. قفل دخل</div>
+          <div id="step-3" class="p-2.5 rounded-xl bg-slate-200/80 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-medium">۳. پست و بارکد</div>
+          <div id="step-4" class="p-2.5 rounded-xl bg-slate-200/80 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-medium">۴. تسویه سود</div>
+        </div>
+
+        <div id="escrow-detail-box" class="p-5 rounded-2xl glass-subcard space-y-2 min-h-[110px] flex flex-col justify-center text-center text-xs md:text-sm text-slate-600 dark:text-slate-300">
+          برای دیدن زنجیره، یک کالا را از پنل سمت راست انتخاب کنید.
+        </div>
+
+        <div id="escrow-actions" class="hidden flex gap-2.5 pt-1"></div>
+
+        <!-- کاتالوگ ابری اقلام -->
+        <div class="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+          <div class="text-xs md:text-sm font-bold text-slate-900 dark:text-white">📦 اقلام حاضر در انبار مشترک ابری:</div>
+          <div class="max-h-44 overflow-y-auto space-y-2 pr-1" id="inventory-list"></div>
+        </div>
       </div>
 
     </section>
 
   </main>
 
-  <!-- جاوااسکریپت کنترل تب‌ها و چرتکه -->
+  <!-- مودال ثبت کالای جدید -->
+  <div id="register-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-panel max-w-lg w-full p-6 md:p-8 rounded-3xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h4 class="text-base font-bold text-slate-900 dark:text-white">ثبت کالای مازاد در قفسه ابری هم‌بار</h4>
+        <button onclick="closeRegisterModal()" class="text-2xl font-bold text-slate-400 hover:text-slate-600 dark:hover:text-white">&times;</button>
+      </div>
+      <div class="space-y-3 text-xs md:text-sm">
+        <div>
+          <label class="block text-slate-700 dark:text-slate-300 mb-1 font-bold">نام دقیق کالا و مشخصه:</label>
+          <input type="text" id="new-item-title" placeholder="مثلاً: کفش کتانی سفید سایز ۳۹" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-700 dark:text-slate-300 mb-1 font-bold">قیمت تسویه همکار (تومان):</label>
+            <input type="number" id="new-item-price" placeholder="۳۲۰,۰۰۰" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white">
+          </div>
+          <div>
+            <label class="block text-slate-700 dark:text-slate-300 mb-1 font-bold">موجودی آزاد در قفسه:</label>
+            <input type="number" id="new-item-qty" value="5" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white">
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-700 dark:text-slate-300 mb-1 font-bold">شناسه پیج اینستاگرام همکار:</label>
+          <input type="text" id="new-item-seller" placeholder="@store_name" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white">
+        </div>
+      </div>
+      <div class="flex justify-end gap-2.5 pt-3">
+        <button onclick="closeRegisterModal()" class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs md:text-sm font-bold text-slate-700 dark:text-white">انصراف</button>
+        <button onclick="addNewItem()" class="px-5 py-2 rounded-xl bg-brand-600 text-white font-bold text-xs md:text-sm shadow">ثبت کالا در انبار مشترک</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- فوتر پروژه -->
+  <footer class="glass-panel border-t mt-auto py-4 px-6 text-xs text-slate-500 dark:text-slate-400 text-center">
+    سامانه هم‌بار — انبار ابری اشتراکی (Virtual Pooling) و تسویه امانی فروشندگان سوشال‌کامرس | مجهز به سپر بقا ⚡
+  </footer>
+
+  <!-- اسکریپت‌های تعاملی -->
   <script>
-    // سوئیچ تب‌ها
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('text-emerald-400', 'bg-emerald-500/10');
-        btn.classList.add('text-slate-400');
+    const defaultDatabase = [
+      { id: 1, title: 'هودی دورس پنبه‌ای مشکی L', price: 380000, qty: 7, seller: '@mode_parsi', city: 'تهران', rating: '۴.۹' },
+      { id: 2, title: 'ماگ سرامیکی مینیمال دست‌ساز', price: 165000, qty: 12, seller: '@ceramic_art', city: 'اصفهان', rating: '۴.۸' },
+      { id: 3, title: 'کیف دوشی کتان مینیمال', price: 290000, qty: 5, seller: '@linen_design', city: 'رشت', rating: '۵.۰' },
+      { id: 4, title: 'پک جوراب ساقدار فانتزی', price: 120000, qty: 30, seller: '@socks_gallery', city: 'شیراز', rating: '۴.۷' },
+      { id: 5, title: 'شمع معطر موم عسل', price: 95000, qty: 15, seller: '@honey_candle', city: 'مشهد', rating: '۴.۹' }
+    ];
+
+    let itemsDB = [...defaultDatabase];
+    let selectedMatch = null;
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const colors = { success: 'bg-emerald-600', info: 'bg-indigo-600', warning: 'bg-amber-600', error: 'bg-rose-600' };
+      toast.className = `pointer-events-auto px-4 py-2.5 rounded-2xl text-white text-xs md:text-sm font-bold shadow-2xl transition-all transform ${colors[type] || colors.info}`;
+      toast.innerText = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3200);
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+      document.getElementById('theme-text').innerText = isDark ? 'حالت روز' : 'حالت شب';
+    }
+
+    function switchMainTab(tabId) {
+      const tabs = ['home', 'survival', 'market', 'mvp'];
+      tabs.forEach(t => {
+        const viewEl = document.getElementById(`view-${t}`);
+        const btnEl = document.getElementById(`tab-btn-${t}`);
+        if (viewEl) viewEl.classList.add('hidden');
+        if (btnEl) {
+          btnEl.className = 'whitespace-nowrap flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-white transition-all shrink-0';
+        }
       });
 
-      const activeContent = document.getElementById('content-' + tabId);
-      const activeTabBtn = document.getElementById('tab-' + tabId);
-
-      if (activeContent) activeContent.classList.remove('hidden');
-      if (activeTabBtn) {
-        activeTabBtn.classList.remove('text-slate-400');
-        activeTabBtn.classList.add('text-emerald-400', 'bg-emerald-500/10');
+      const activeView = document.getElementById(`view-${tabId}`);
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (activeView) activeView.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.className = 'whitespace-nowrap flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-gradient-to-r from-brand-600 to-teal-600 text-white shadow-sm shrink-0';
       }
+
+      if (tabId === 'mvp') renderInventoryList();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // لاجیک ماشین‌حساب چرتکه سود
-    const inDirects = document.getElementById('input-directs');
-    const inPrice = document.getElementById('input-price');
-    const inMargin = document.getElementById('input-margin');
+    function updateCalculator() {
+      const lostOrders = parseInt(document.getElementById('calc-lost-slider').value);
+      const avgPrice = parseInt(document.getElementById('calc-price-slider').value);
 
-    const valDirects = document.getElementById('val-directs');
-    const valPrice = document.getElementById('val-price');
-    const valMargin = document.getElementById('val-margin');
-    const resProfit = document.getElementById('result-profit');
+      document.getElementById('calc-lost-label').innerText = `${lostOrders} سفارش در روز`;
+      document.getElementById('calc-price-label').innerText = `${avgPrice.toLocaleString('fa-IR')} تومان`;
 
-    function calculateProfit() {
-      const directs = parseInt(inDirects.value);
-      const price = parseInt(inPrice.value);
-      const margin = parseInt(inMargin.value) / 100;
+      const monthlyGross = lostOrders * 30 * avgPrice;
+      const profitSalvaged = Math.round(monthlyGross * 0.30);
 
-      valDirects.innerText = directs.toLocaleString('fa-IR') + ' استعلام';
-      valPrice.innerText = price.toLocaleString('fa-IR') + ' تومان';
-      valMargin.innerText = (margin * 100).toLocaleString('fa-IR') + '٪ سود';
-
-      // فرمول: ۳۵٪ استعلام‌ها به خاطر کسری می‌سوزند. هم‌بار حداقل ۵۰٪ این کسری‌ها را به خرید قطعی تبدیل می‌کند.
-      const savedOrders = directs * 0.35 * 0.50; 
-      const profit = savedOrders * price * margin;
-
-      resProfit.innerText = Math.round(profit).toLocaleString('fa-IR') + ' تومان';
+      document.getElementById('calc-lost-total').innerText = `${monthlyGross.toLocaleString('fa-IR')} ت`;
+      document.getElementById('calc-salvaged-profit').innerText = `${profitSalvaged.toLocaleString('fa-IR')} ت`;
     }
 
-    inDirects.addEventListener('input', calculateProfit);
-    inPrice.addEventListener('input', calculateProfit);
-    inMargin.addEventListener('input', calculateProfit);
+    function renderInventoryList() {
+      const list = document.getElementById('inventory-list');
+      if (!list) return;
+      list.innerHTML = '';
+      itemsDB.forEach(item => {
+        const d = document.createElement('div');
+        d.className = 'p-3 rounded-2xl glass-subcard flex justify-between items-center text-xs md:text-sm';
+        d.innerHTML = `
+          <div>
+            <div class="font-bold text-slate-900 dark:text-white">${item.title}</div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">${item.seller} (${item.city}) • ⭐ ${item.rating}</div>
+          </div>
+          <div class="text-left font-mono">
+            <div class="text-brand-600 dark:text-brand-400 font-bold">${item.price.toLocaleString('fa-IR')} ت</div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400">${item.qty} موجود در قفسه</div>
+          </div>
+        `;
+        list.appendChild(d);
+      });
+      document.getElementById('stat-total-items').innerText = `${itemsDB.length} کالا`;
+    }
 
-    // محاسبه اولیه در هنگام لود
-    calculateProfit();
+    function fillRequestForm(title) {
+      document.getElementById('search-input').value = title;
+      handleSearch();
+    }
+
+    function handleSearch() {
+      const q = document.getElementById('search-input').value.trim();
+      if (!q) return showToast('نام کالا را وارد نمایید', 'warning');
+      const found = itemsDB.find(i => i.title.includes(q) || q.includes(i.title.split(' ')[0]));
+      const container = document.getElementById('match-result-container');
+      const content = document.getElementById('matched-card-content');
+
+      if (found) {
+        selectedMatch = found;
+        const comm = Math.round(found.price * 0.03);
+        const share = found.price - comm;
+        content.innerHTML = `
+          <div class="font-bold text-sm md:text-base text-slate-900 dark:text-white">${found.title}</div>
+          <div class="text-xs text-slate-600 dark:text-slate-300">تأمین‌کننده در هم‌بار: <b class="text-brand-600 dark:text-brand-400">${found.seller}</b> (${found.city})</div>
+          <div class="grid grid-cols-3 gap-2 py-2 border-y border-slate-200 dark:border-slate-800 text-xs font-mono">
+            <div>قیمت تسویه: <br><strong class="text-slate-900 dark:text-white">${found.price.toLocaleString('fa-IR')} ت</strong></div>
+            <div>سهم همکار: <br><strong class="text-teal-600 dark:text-teal-400">${share.toLocaleString('fa-IR')} ت</strong></div>
+            <div>کارمزد ۳٪: <br><strong class="text-amber-600 dark:text-amber-400">${comm.toLocaleString('fa-IR')} ت</strong></div>
+          </div>
+          <div class="text-[11px] text-slate-500 dark:text-slate-400">ارسال بدون نام با مشخصات و لیبل پیج خود شما انجام می‌گیرد.</div>
+        `;
+        container.classList.remove('hidden');
+        showToast('انطباق در قفسه همکار پیدا شد!', 'success');
+      } else {
+        container.classList.add('hidden');
+        showToast('کالایی با این عنوان در انبار مشترک یافت نشد', 'error');
+      }
+    }
+
+    function startEscrowFlow() {
+      updateStepUI(2);
+      const detail = document.getElementById('escrow-detail-box');
+      const actions = document.getElementById('escrow-actions');
+      const badge = document.getElementById('escrow-badge');
+
+      badge.innerText = 'وضعیت: وجه در دخل امانت قفل شد';
+      badge.className = 'text-[11px] bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 px-3 py-0.5 rounded-full font-mono font-bold';
+
+      detail.innerHTML = `
+        <div class="text-right space-y-1.5">
+          <div class="font-bold text-amber-600 dark:text-amber-400 text-sm md:text-base">🔒 مرحله ۲: وجه فاکتور نزد دخل امانت هم‌بار فریز شد</div>
+          <p class="text-slate-700 dark:text-slate-200 text-xs md:text-sm leading-relaxed">مبلغ <b>${selectedMatch.price.toLocaleString('fa-IR')} تومان</b> در امانت ماند. پیامک آماده‌سازی برای تأمین‌کننده (${selectedMatch.seller}) ارسال شد تا بسته را با نام پیج شما بسته‌بندی کند.</p>
+        </div>
+      `;
+
+      actions.classList.remove('hidden');
+      actions.innerHTML = `
+        <button onclick="simulateShipping()" class="px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs md:text-sm font-bold hover:bg-indigo-500 transition shadow">
+          🚚 تحویل به پست و صدور بارکد ۲۴ رقمی
+        </button>
+      `;
+      showToast('وجه با موفقیت در دخل امانت قفل گردید', 'info');
+    }
+
+    function simulateShipping() {
+      updateStepUI(3);
+      const barcode = '30198' + Math.floor(1000000000 + Math.random() * 9000000000);
+      const detail = document.getElementById('escrow-detail-box');
+      const actions = document.getElementById('escrow-actions');
+      const badge = document.getElementById('escrow-badge');
+
+      badge.innerText = 'وضعیت: مرسوله تحویل پست پیشتاز شد';
+      badge.className = 'text-[11px] bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 px-3 py-0.5 rounded-full font-mono font-bold';
+
+      detail.innerHTML = `
+        <div class="text-right space-y-1.5">
+          <div class="font-bold text-indigo-600 dark:text-indigo-400 text-sm md:text-base">📦 مرحله ۳: بارکد پست پیشتاز صادر و استعلام شد</div>
+          <p class="text-slate-700 dark:text-slate-200 text-xs md:text-sm leading-relaxed">بارکد استعلام‌شده پستی: <code class="bg-black/10 dark:bg-black/40 px-2 py-0.5 rounded text-amber-600 dark:text-amber-400 font-mono">${barcode}</code>. پیامک رهگیری اتوماتیک با نام پیج شما برای خریدار ارسال گردید.</p>
+        </div>
+      `;
+
+      actions.innerHTML = `
+        <button onclick="finalizeEscrow()" class="px-4 py-2.5 bg-emerald-600 text-white rounded-xl text-xs md:text-sm font-bold hover:bg-emerald-500 transition shadow">
+          ✅ تأیید تحویل و آزادسازی سهم به شبای همکار
+        </button>
+      `;
+      showToast('بارکد پستی صادر و اعتبارسنجی شد', 'info');
+    }
+
+    function finalizeEscrow() {
+      updateStepUI(4);
+      const comm = Math.round(selectedMatch.price * 0.03);
+      const payout = selectedMatch.price - comm;
+
+      const detail = document.getElementById('escrow-detail-box');
+      const actions = document.getElementById('escrow-actions');
+      const badge = document.getElementById('escrow-badge');
+
+      badge.innerText = 'وضعیت: چرخه کامل و تسویه انجام شد';
+      badge.className = 'text-[11px] bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 px-3 py-0.5 rounded-full font-mono font-bold';
+
+      detail.innerHTML = `
+        <div class="text-right space-y-1.5">
+          <div class="font-bold text-emerald-600 dark:text-emerald-400 text-sm md:text-base">🎉 مرحله ۴: آزادسازی وجه و نجات ۱۰۰٪ سود دایرکت</div>
+          <p class="text-slate-700 dark:text-slate-200 text-xs md:text-sm leading-relaxed">سهم همکار (<b>${payout.toLocaleString('fa-IR')} ت</b>) واریز شد و کارمزد هم‌بار (<b>${comm.toLocaleString('fa-IR')} ت</b>) ثبت گردید. مشتری پیج شما با موفقیت حفظ شد!</p>
+        </div>
+      `;
+
+      actions.innerHTML = `
+        <button onclick="resetFlow()" class="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-xl text-xs md:text-sm font-bold text-slate-700 dark:text-white hover:bg-slate-200/50 dark:hover:bg-slate-800 transition">
+          شبیه‌سازی سفارش جدید 🔄
+        </button>
+      `;
+
+      selectedMatch.qty -= 1;
+      renderInventoryList();
+      showToast('چرخه سفارش با موفقیت کامل شد', 'success');
+    }
+
+    function updateStepUI(step) {
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById(`step-${i}`);
+        if (i <= step) {
+          el.className = 'p-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-teal-600 text-white font-bold text-xs shadow';
+        } else {
+          el.className = 'p-2.5 rounded-xl bg-slate-200/80 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-medium text-xs';
+        }
+      }
+    }
+
+    function resetFlow() {
+      selectedMatch = null;
+      document.getElementById('match-result-container').classList.add('hidden');
+      document.getElementById('search-input').value = '';
+      document.getElementById('escrow-badge').innerText = 'وضعیت: آماده سفارش جدید';
+      document.getElementById('escrow-badge').className = 'text-[11px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-0.5 rounded-full font-mono font-bold';
+      document.getElementById('escrow-detail-box').innerHTML = 'برای دیدن زنجیره، یک کالا را از پنل سمت راست انتخاب کنید.';
+      document.getElementById('escrow-actions').classList.add('hidden');
+      updateStepUI(1);
+    }
+
+    function showRegisterModal() { document.getElementById('register-modal').classList.remove('hidden'); }
+    function closeRegisterModal() { document.getElementById('register-modal').classList.add('hidden'); }
+
+    function addNewItem() {
+      const title = document.getElementById('new-item-title').value.trim();
+      const price = parseInt(document.getElementById('new-item-price').value);
+      const qty = parseInt(document.getElementById('new-item-qty').value) || 1;
+      const seller = document.getElementById('new-item-seller').value.trim() || '@store_partner';
+
+      if (!title || isNaN(price)) return showToast('اطلاعات کالا معتبر نیست', 'warning');
+
+      itemsDB.unshift({ id: itemsDB.length + 1, title, price, qty, seller, city: 'تهران', rating: '۵.۰' });
+      renderInventoryList();
+      closeRegisterModal();
+      showToast(`کالای «${title}» به انبار مشترک اضافه شد.`, 'success');
+    }
+
+    function resetData() {
+      itemsDB = [...defaultDatabase];
+      renderInventoryList();
+      resetFlow();
+      showToast('اطلاعات به وضعیت اولیه بازگشت', 'info');
+    }
+
+    window.onload = () => {
+      renderInventoryList();
+      updateCalculator();
+    };
   </script>
 </body>
 </html>
